@@ -511,7 +511,7 @@ Deny from all
 	</target>
 
 	<!-- Base tests to run on every project -->
-	<target name="test_build" depends="default_configs,composer-install">
+	<target name="test_build">
 		<if>
 			<available file="phpunit.build.xml" />
 			<then>
@@ -523,12 +523,12 @@ Deny from all
 	</target>
 
 	<!-- Project-specific tests to run -->
-	<target name="test_project" depends="default_configs,composer-install">
+	<target name="test_project">
 		<exec command="cd vendor/bin &amp;&amp; phpunit -c ../../phpunit.project.xml" passthru="true" checkreturn="true" />
 	</target>
 
 	<!-- Execute all the test cases -->
-	<target name="test">
+	<target name="test" depends="default_configs">
 		<phingcall target="test_build" />
 		<phingcall target="test_project" />
 	</target>
