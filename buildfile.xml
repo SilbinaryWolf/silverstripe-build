@@ -138,6 +138,8 @@ Other features
 	
 	<!-- default config file set -->
 	<target name="default_configs" description="Ensure default configuration files are available">
+		<!-- Make sure the log directory exists -->
+		<mkdir dir="${testing.logdir}" />
 		<!-- if assets folder doesn't exist, create it and the default .htaccess -->
 		<mkdir dir="assets" />
 		<if>
@@ -508,20 +510,27 @@ Deny from all
 		<exec command="ps -ef | grep solr_${phing.project.name} | grep -v grep | awk '{print $2}' | xargs kill " spawn="true" checkreturn="true" />
 	</target>
 
-	<!-- Execute all the test cases -->
-	<target name="test" depends="default_configs">
-		<!-- Make sure the log directory exists -->
-		<mkdir dir="${testing.logdir}" />
-		<mkdir dir="assets" />
+	<!-- Base tests to run on every project -->
+	<target name="test_build" depends="default_configs,composer-install">
 		<if>
-			<not>
-				<available file="vendor/phpunit/phpunit/phpunit.php" />
-			</not>
+			<available file="phpunit.build.xml" />
 			<then>
-				<phingcall target="composer-install" />
+				<echo msg="Warning: phpunit.build.xml already existed. This should not be committed into the repo." />
 			</then>
 		</if>
-		<sstest module="${module}" testcase="${testcase}" flush="${flush}" build="${build}" coverage="${coverage}" />
+		<exec command="cp -rf build/phpunit.build.xml phpunit.build.xml" passthru="true" checkreturn="true" />
+		<exec command="cd vendor/bin &amp;&amp; phpunit -c ../../phpunit.build.xml" passthru="true" checkreturn="true" />
+	</target>
+
+	<!-- Project-specific tests to run -->
+	<target name="test_project" depends="default_configs,composer-install">
+		<exec command="cd vendor/bin &amp;&amp; phpunit -c ../../phpunit.project.xml" passthru="true" checkreturn="true" />
+	</target>
+
+	<!-- Execute all the test cases -->
+	<target name="test">
+		<phingcall target="test_build" />
+		<phingcall target="test_project" />
 	</target>
 
 	<target name="archive-package">

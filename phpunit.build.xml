@@ -1,0 +1,40 @@
+<!-- 
+	Copied by Phing into the root directory and then executed (2017-04-06)
+-->
+<phpunit bootstrap="framework/tests/bootstrap.php" colors="true" backupGlobals="false" backupStaticAttributes="false" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnError="false" stopOnFailure="false" stopOnIncomplete="false" stopOnSkipped="false" syntaxCheck="false" verbose="true">
+
+	<testsuite name="Build">
+		<file>multisites/tests/cms/controller/MultisitesCMSMainTest.php</file>
+		<!-- <directory>cms/tests</directory>
+		<exclude>
+			<file>cms/tests/controller/CMSMainTest.php</file>
+			<file>cms/tests/controller/CMSSiteTreeFilterTest.php</file>
+			<file>cms/tests/controller/CMSBatchActionsTest.php</file>
+			<file>cms/tests/model/SiteTreeTest.php</file>
+			<file>cms/tests/model/VirtualPageTest.php</file>
+			<file>cms/tests/model/SiteTreeBacklinksTest.php</file>
+			<file>cms/tests/model/SiteTreePermissionsTest.php</file>
+			<file>cms/tests/controller/ContentControllerTest.php</file>
+			<file>cms/tests/controller/ModelAsControllerTest.php</file>
+			<file>cms/tests/controller/ContentControllerPermissionsTest.php</file>
+		</exclude> -->
+	</testsuite>
+	
+	<listeners>
+		<listener class="PhingXMLPHPUnit3ResultFormatter" file="ssautesting/code/PhingXMLPHPUnit3ResultFormatter.php" />
+	</listeners>
+
+	<groups>
+		<exclude>
+			<group>sanitychecks</group>
+		</exclude>
+	</groups>
+
+	<php>
+        <var name="runningtests" value="true"/>
+        <!-- For Multisites module as it applies an extension depending on a PHPUnit constant -->
+        <var name="flush" value="all"/>
+    </php>
+	
+</phpunit>
+
